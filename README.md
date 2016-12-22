@@ -1,7 +1,7 @@
 ## Introduction
 This tutorial will teach you how to set up your own robust email server. We are focusing on a small personal server with up to a few email accounts. After following this guide, you will have a fully functional mail server and you can connect with your favourite client to access, read and send emails. The Anti-Spam configuration will drop unwanted messages.
 
-This tutorial will use **yourdomain.com** as domain name and **mail.yourdomain.com** as hostname for our mail server. The desired email address will be **yourname@yourdomain.com**. We assume that our server has the IP address **1.2.3.4**.
+This tutorial will use **yourdomain.com** as domain name and **mail.yourdomain.com** as hostname for our mail server. The desired email address will be **yourname@yourdomain.com**. We assume that our server has the IPv4 address **1.2.3.4**. If the server has an IPv6 address, we assume it is **fefe:ab1c:490d::fee5**.
 
 ### Software and technologies used
 * Postfix v2.9.6 as SMTP server
@@ -23,7 +23,7 @@ You're invited to follow the links in this tutorial to learn more about the soft
 
 ### System
 
-* A VPS running Ubuntu 12.04 or 14.04 (setup will be similar on any Debian based distribution). ([Get a VPS here](https://www.digitalocean.com/?refcode=79aec8435127))
+* A VPS running Ubuntu 12.04, 14.04, or 16.04 (setup will be similar on any Debian based distribution). ([Get a VPS here](https://www.digitalocean.com/?refcode=79aec8435127))
 * Your own FQDN domain name.
 
 [How To Setup your own Mail Server with anti-spam configuration in 60 minutes](https://skrilnetz.net/setup-your-own-mailserver/)

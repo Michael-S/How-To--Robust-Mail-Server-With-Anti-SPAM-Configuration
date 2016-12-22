@@ -1,7 +1,7 @@
 ## Introduction
 This tutorial will teach you how to set up your own robust email server. We are focusing on a small personal server with up to a few email accounts. After following this guide, you will have a fully functional mail server and you can connect with your favourite client to access, read and send emails. The Anti-Spam configuration will drop unwanted messages.
 
-This tutorial will use **yourdomain.com** as domain name and **mail.yourdomain.com** as hostname for our mail server. The desired email address will be **yourname@yourdomain.com**. We assume that our server has the IP address **1.2.3.4**.
+This tutorial will use **yourdomain.com** as domain name and **mail.yourdomain.com** as hostname for our mail server. The desired email address will be **yourname@yourdomain.com**. We assume that our server has the IPv4 address **1.2.3.4** and IPv6 address **fefe:ab1c:490d::fee5**.  If your mail server does not have an IPv6 address, that's fine.  But if it has one, you must include it in your configuration or GMail will reject your messages as spam.
 
 ### Software and technologies used
 * Postfix v2.9.6 as SMTP server
@@ -24,7 +24,7 @@ You're invited to follow the links in this tutorial to learn more about the soft
 
 ### System
 
-* A VPS running Ubuntu 12.04 or 14.04 (setup will be similar on any Debian based distribution). ([Get a VPS here](https://www.digitalocean.com/?refcode=79aec8435127))
+* A VPS running Ubuntu 12.04, 14.04, or 16.04 (setup will be similar on any Debian based distribution). ([Get a VPS here](https://www.digitalocean.com/?refcode=79aec8435127))
 * Your own FQDN domain name.
 
 We will be working on a `root` shell and the tutorial will use `vim` as text editor.
@@ -43,6 +43,11 @@ vim /etc/hosts
 We add **yourdomain.com** and **mail.yourdomain.com** in the first line.
 ~~~~
 127.0.0.1 localhost yourdomain.com mail.yourdomain.com
+~~~~
+
+If you have an IPv6 address, for the line ::1     localhost add **yourdomain.com** and **mail.yourdomain.com** too.
+~~~~
+::1 localhost yourdomain.com mail.yourdomain.com
 ~~~~
 
 #### Setting up the mailname
@@ -74,7 +79,12 @@ We assume that our domain is already setup in the DNS control panel and we see t
 
 <a href="https://skrilnetz.net/wp-content/uploads/2014/06/geFtQf91.png"><img class="alignnone size-medium wp-image-140" src="https://skrilnetz.net/wp-content/uploads/2014/06/geFtQf91-600x211.png" alt="geFtQf9" width="600" height="211" /></a>
 
-(There is a 'dot' after the domain name)
+(There is a 'dot' after the domain name.)
+
+### Setting up the AAAA record
+
+(These are the A records for IPv6 addresses. There is also a 'dot' after the domain name.)
+If you have an IPv6 address on your server, you have to add these too. Just like A records, you want @ and your full IPv6 address and then mail.yourdomain.com. and your full IPv6 address. Also just like the A records, you should have three entries: @ and yourdomain.com. and mail.yourdomain.com.
 
 ### Setting up the MX record
 
@@ -85,6 +95,10 @@ We assume that our domain is already setup in the DNS control panel and we see t
 ### Setting up the SPF record
 
 We create a new TXT record
+~~~~
+"v=spf1 a mx ip4:1.2.3.4 ip6:fefe:ab1c:490d::fee5 -all"
+~~~~
+If you do not have an IPv6 address, then
 ~~~~
 "v=spf1 a mx ip4:1.2.3.4 -all"
 ~~~~
@@ -482,6 +496,10 @@ We can observe the ongoing transactions and spot possible errors by monitoring o
 ~~~~
 tail -f /var/log/syslog
 ~~~~
+For Ubuntu 16.04, instead use journalctl (use 'q' to quit)
+~~~~
+journalctl -xe
+~~~~
 
 We can test our SPF and DKIM configuration [here](http://www.appmaildev.com/en/dkim/) and DMARC [here](http://dmarc.org/).
 
@@ -580,5 +598,9 @@ smtp inet n - - - - smtpd -v
 ### Check the syslog with
 ~~~~
 tail -f /var/log/syslog
+~~~~
+Or in Ubuntu 16.04 with journalctl (use 'q' to quit)
+~~~~
+journalctl -xe
 ~~~~
 and observe the logging.
